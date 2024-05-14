@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my_app/model/product.dart';
 import 'package:http/http.dart' as http;
 
-class UserDataProvider with ChangeNotifier {
+class ProductProvider with ChangeNotifier {
   String url = "http://127.0.0.1:8000/daftar_product";
   List<ProductModel> _userProvider = [];
 
@@ -15,7 +15,8 @@ class UserDataProvider with ChangeNotifier {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final List<dynamic> userData = jsonDecode(response.body)['data'];
-        _userProvider = userData.map((data) => ProductModel.fromJson(data)).toList();
+        _userProvider =
+            userData.map((data) => ProductModel.fromJson(data)).toList();
 
         // Infokan bahwa data telah berubah
         notifyListeners();
@@ -29,7 +30,8 @@ class UserDataProvider with ChangeNotifier {
 
   Future<ProductModel?> fetchProductDetail(int index) async {
     try {
-      final response = await http.get(Uri.parse('http://127.0.0.1:8000/detil_product/$index'));
+      final response = await http
+          .get(Uri.parse('http://127.0.0.1:8000/detil_product/$index'));
       if (response.statusCode == 200) {
         final Map<String, dynamic> productData = jsonDecode(response.body);
         return ProductModel.fromJson(productData);
@@ -42,5 +44,3 @@ class UserDataProvider with ChangeNotifier {
     return null;
   }
 }
-
-

@@ -100,8 +100,10 @@ class DetailproductPage extends StatelessWidget {
                   ),
                 ),
               );
-            })
-          ],
-        ));
+            }
+          )
+        ],
+      )
+    );
   }
 }
