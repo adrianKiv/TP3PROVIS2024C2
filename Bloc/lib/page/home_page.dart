@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
                       onPressed: () {
                         context.read<productListCubit>().fetchData();
                       },
-                      child: const Text('Reload Daftar Product'),
+                      child: const Text('Reload Daftar Product using Bloc'),
                     ),
                     const SizedBox(
                       height: 20.0,

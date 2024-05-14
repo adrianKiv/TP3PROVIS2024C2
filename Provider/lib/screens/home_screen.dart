@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
                       onPressed: () {
                         context.read<ProductProvider>().fetchData();
                       },
-                      child: const Text('Reload Daftar Produck'),
+                      child: const Text('Reload Daftar Produck using Provider'),
                     ),
                     const SizedBox(
                       height: 20.0,
