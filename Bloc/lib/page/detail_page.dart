@@ -11,7 +11,7 @@ class DetailproductPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Detail'),
+          title: const Text('Detail Product'),
           centerTitle: true,
         ),
         body: Column(

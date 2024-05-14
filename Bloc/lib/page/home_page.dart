@@ -29,16 +29,16 @@ class HomePage extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    Text(
-                        'NIM 1, NAMA 1; NIM 2, NAMA 2; Saya berjanji tidak akan berbuat curang data atau membantu orang lain berbuat curang'),
-                    SizedBox(
+                    const Text(
+                        'NIM : 2200939, NAMA : Adrian Mulianto; NIM : 2201017, NAMA : Ilham Akbar'),
+                    const SizedBox(
                       height: 20.0,
                     ),
                     ElevatedButton(
                       onPressed: () {
                         context.read<productListCubit>().fetchData();
                       },
-                      child: const Text('Reload Daftar UMKM'),
+                      child: const Text('Reload Daftar Product'),
                     ),
                     const SizedBox(
                       height: 20.0,
