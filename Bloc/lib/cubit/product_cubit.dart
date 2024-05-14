@@ -1,8 +1,9 @@
-import 'package:umkm_bloc/cubit/product_state.dart';
+import 'package:product_bloc/cubit/product_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+// ignore: camel_case_types
 class productCubit extends Cubit<ProductModel> {
   String url = "http://127.0.0.1:8000/detil_product/";
   productCubit()

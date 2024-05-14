@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:umkm_bloc/cubit/product_cubit.dart';
-import 'package:umkm_bloc/cubit/product_state.dart';
+import 'package:product_bloc/cubit/product_cubit.dart';
+import 'package:product_bloc/cubit/product_state.dart';
 import 'dart:developer' as developer;
 
-class DetailUmkmPage extends StatelessWidget {
+class DetailproductPage extends StatelessWidget {
+  const DetailproductPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,12 +16,12 @@ class DetailUmkmPage extends StatelessWidget {
         ),
         body: Column(
           children: [
-            BlocBuilder<umkmCubit, umkmModel>(
+            BlocBuilder<productCubit, ProductModel>(
                 buildWhen: (previousState, state) {
-              developer.log('${previousState.name}->${state.name}',
+              developer.log('${previousState.title}->${state.title}',
                   name: 'log');
               return true;
-            }, builder: (context, umkmDetail) {
+            }, builder: (context, detailProduct) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
@@ -30,7 +32,7 @@ class DetailUmkmPage extends StatelessWidget {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 5,
                         blurRadius: 7,
-                        offset: Offset(0, 3),
+                        offset: const Offset(0, 3),
                       )
                     ],
                   ),
@@ -38,31 +40,59 @@ class DetailUmkmPage extends StatelessWidget {
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
                       children: [
+                        Image.network(
+                          detailProduct.image,
+                          width: 100, // lebar gambar
+                          height: 100, // tinggi gambar
+                          loadingBuilder: (BuildContext context, Widget child,
+                              ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
                         Text(
-                          'Nama: ${umkmDetail.name}',
-                          style: TextStyle(color: Colors.white),
+                          'Nama: ${detailProduct.title}',
+                          style: const TextStyle(color: Colors.white),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5.0,
                         ),
-                        Text('Detail: ${umkmDetail.type}',
-                            style: TextStyle(color: Colors.white)),
-                        SizedBox(
+                        Text("price: ${detailProduct.price}",
+                            style: const TextStyle(color: Colors.white)),
+                        const SizedBox(
                           height: 5.0,
                         ),
-                        Text("Membe Sejak: ${umkmDetail.memberSejak}",
-                            style: TextStyle(color: Colors.white)),
-                        SizedBox(
+                        Text('category: ${detailProduct.category} ',
+                            style: const TextStyle(color: Colors.white)),
+                        const SizedBox(
                           height: 5.0,
                         ),
-                        Text('Omzet: ${umkmDetail.omzetBulan} ',
-                            style: TextStyle(color: Colors.white)),
-                        SizedBox(
+                        Text('description: ${detailProduct.description}',
+                            style: const TextStyle(color: Colors.white)),
+                        const SizedBox(
                           height: 5.0,
                         ),
-                        Text('Lama: ${umkmDetail.lamaUsaha}',
-                            style: TextStyle(color: Colors.white)),
-                        SizedBox(
+                        Text('Rating: ${detailProduct.rating.rate}',
+                            style: const TextStyle(color: Colors.white)),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
+                        Text('Number of Ratings: ${detailProduct.rating.count}',
+                            style: const TextStyle(color: Colors.white)),
+                        const SizedBox(
                           height: 5.0,
                         ),
                       ],

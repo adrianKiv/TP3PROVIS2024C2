@@ -1,143 +1,111 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:my_app/model/course.dart';
-import 'package:my_app/provider/course_provider.dart';
+import 'package:my_app/provider/product_provider.dart';
 import 'package:provider/provider.dart';
 
-class DetailPage extends StatelessWidget {
-  const DetailPage({super.key, required this.title, required this.icon, required this.description, required this.lecturer, required this.image});
-  final String title;
-  final IconData icon;
-  final String description;
-  final String lecturer;
-  final String image;
+import 'package:my_app/model/product.dart';
+
+class DetailproductPage extends StatelessWidget {
+  final int index;
+
+  const DetailproductPage({Key? key, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-            ),
-            height: MediaQuery.of(context).size.height / 2,
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 18,
-                ),
-                Align(
-                  child: Icon(
-                    icon,
-                    size: 75,
+      appBar: AppBar(
+        title: const Text('Detail'),
+        centerTitle: true,
+      ),
+      body: FutureBuilder<ProductModel?>(
+        future: Provider.of<UserDataProvider>(context, listen: false)
+            .fetchProductDetail(index),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            ProductModel detailProduct = snapshot.data!;
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blue[200],
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: const Offset(0, 3),
+                      )
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "$title",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                ),
-                Text(description),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(image),
-                      radius: 20,
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      lecturer,
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      var courseProvider = context.read<CourseProvider>();
-                      bool courseExists = courseProvider.isCourseExists(title);
-                      if (!courseExists) {
-                        courseProvider.add(
-                          Course(
-                            icon: icon,
-                            name: title,
-                            description: description,
-                            lecturer: lecturer,
-                            lecturerImage: image,
-                          ),
-                        );
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Added to Chart successfully'),
-                            duration: Duration(seconds: 1),
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Course already exists in the chart'),
-                            duration: Duration(seconds: 1),
-                          ),
-                        );
-                      }
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(
-                        Colors.deepPurple[200],
-                      ),
-                      foregroundColor: MaterialStatePropertyAll(Colors.white),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      children: [
+                        Image.network(
+                          detailProduct.image,
+                          width: 100, // lebar gambar
+                          height: 100, // tinggi gambar
+                          loadingBuilder: (BuildContext context, Widget child,
+                              ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                    ),
-                    child: Text(
-                      "Add to Chart",
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
+                        Text(
+                          'Nama: ${detailProduct.title}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
+                        Text("price: ${detailProduct.price}",
+                            style: const TextStyle(color: Colors.white)),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
+                        Text('category: ${detailProduct.category} ',
+                            style: const TextStyle(color: Colors.white)),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
+                        Text('description: ${detailProduct.description}',
+                            style: const TextStyle(color: Colors.white)),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
+                        Text('Rating: ${detailProduct.rating.rate}',
+                            style: const TextStyle(color: Colors.white)),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
+                        Text('Number of Ratings: ${detailProduct.rating.count}',
+                            style: const TextStyle(color: Colors.white)),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 12,
-                ),
-                Align(
-                  child: TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Add to Favorite ❤️",
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+            );
+          }
+        },
       ),
     );
   }

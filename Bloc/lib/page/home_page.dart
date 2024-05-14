@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:umkm_bloc/cubit/daftar_product_cubit.dart';
-import 'package:umkm_bloc/cubit/product_cubit.dart';
-import 'package:umkm_bloc/cubit/product_state.dart';
+import 'package:product_bloc/cubit/daftar_product_cubit.dart';
+import 'package:product_bloc/cubit/product_cubit.dart';
+import 'package:product_bloc/cubit/product_state.dart';
 import 'dart:developer' as developer;
 
-import 'package:umkm_bloc/page/detail_page.dart';
+import 'package:product_bloc/page/detail_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           foregroundColor: Colors.blue,
-          title: Text(
+          title: const Text(
             'My App',
             style: TextStyle(color: Colors.white),
           ),
@@ -36,42 +36,62 @@ class HomePage extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        context.read<umkmListCubit>().fetchData();
+                        context.read<productListCubit>().fetchData();
                       },
-                      child: Text('Reload Daftar UMKM'),
+                      child: const Text('Reload Daftar UMKM'),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20.0,
                     ),
-                    BlocBuilder<umkmListCubit, List<umkmModel>>(
+                    BlocBuilder<productListCubit, List<ProductModel>>(
                         buildWhen: (previousState, state) {
                       developer.log(
-                          '${previousState[0].name}->${state[0].name}',
+                          '${previousState[0].title}->${state[0].title}',
                           name: 'log');
                       return true;
-                    }, builder: (context, umkmList) {
-                      return Container(
+                    }, builder: (context, productList) {
+                      return SizedBox(
                         height: 500,
                         child: ListView.builder(
-                          itemCount: umkmList.length,
+                          itemCount: productList.length,
                           itemBuilder: (context, index) {
-                            if (umkmList[0].name != "") {
+                            if (productList[0].title != "") {
                               return ListTile(
                                   leading: Image.network(
-                                      'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
-                                  title: Text(umkmList[index].name),
-                                  subtitle: Text(umkmList[index].type),
-                                  trailing: Icon(Icons.more_vert_rounded),
+                                    productList[index].image,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      }
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  title: Text(productList[index].title),
+                                  subtitle: Text(productList[index].category),
+                                  trailing: const Icon(Icons.more_vert_rounded),
                                   onTap: () {
                                     Navigator.of(context).push(
                                         MaterialPageRoute(builder: (context) {
-                                      context
-                                          .read<umkmCubit>()
-                                          .fetchData(umkmList[index].id);
-                                      return DetailUmkmPage();
+                                      context.read<productCubit>().fetchData(
+                                          productList[index].id.toString());
+                                      return const DetailproductPage();
                                     }));
                                   });
                             }
+                            return null;
                           },
                         ),
                       );

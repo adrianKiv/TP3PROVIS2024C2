@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:umkm_bloc/cubit/daftar_product_cubit.dart';
-import 'package:umkm_bloc/cubit/product_cubit.dart';
-import 'package:umkm_bloc/page/home_page.dart';
+import 'package:product_bloc/cubit/daftar_product_cubit.dart';
+import 'package:product_bloc/cubit/product_cubit.dart';
+import 'package:product_bloc/page/home_page.dart';
 
 //model berisi data/state
 
